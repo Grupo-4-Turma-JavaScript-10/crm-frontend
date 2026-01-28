@@ -6,11 +6,21 @@ import vinculo from "../../assets/chain.png"
 import user from "../../assets/user.png"
 import notification from "../../assets/notification.png"
 import canto from "../../assets/canto.png"
-
 import { useState } from "react"
+import { Link, useLocation } from "react-router-dom"
 
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const location = useLocation()
+
+  const navigationItems = [
+    { label: "Dashboard", path: "/home", icon: dashIco },
+    { label: "Estudantes", path: "/estudantes", icon: estudantes },
+    { label: "Bolsas", path: "/bolsas", icon: bolsa },
+    { label: "Vínculos", path: "/vinculos", icon: vinculo }
+  ]
+
+  const isActive = (path: string) => location.pathname === path
 
   return (
     <>
@@ -51,33 +61,47 @@ function Navbar() {
             className="w-36"
           />
         </div>
-
-        <nav className="flex flex-col gap-1 px-3">
-          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
-            <img src={dashIco} alt="Dashboard" className="w-7" />
-            <h2>Dashboard</h2>
-          </div>
-
-          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
-            <img src={estudantes} alt="Estudantes" className="w-7 scale-75" />
-            <h2>Estudantes</h2>
-          </div>
-
-          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
-            <img src={bolsa} alt="Bolsas" className="w-7 scale-75" />
-            <h2>Bolsas</h2>
-          </div>
-
-          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
-            <img src={vinculo} alt="Vínculos" className="w-7 scale-75" />
-            <h2>Vínculos</h2>
-          </div>
+        
+        <nav className="flex flex-col gap-1 px-3 mt-4">
+          {navigationItems.map((item) => (
+            <Link
+              key={item.path}
+              to={item.path}
+              className={`
+                relative
+                group
+                flex
+                items-center
+                gap-4
+                p-3
+                rounded-xl
+                text-lg
+                transition-all
+                duration-200
+                ${isActive(item.path) 
+                  ? "bg-azulescuro text-white" 
+                  : "text-gray-700 hover:bg-azulescuro hover:text-white"
+                }
+              `}
+              onClick={() => setMenuOpen(false)}
+            >
+              <img 
+                src={item.icon} 
+                alt={item.label} 
+                className={`w-7 ${item.label !== "Dashboard" ? "scale-75" : ""}`}
+              />
+              <h2>{item.label}</h2>
+              {isActive(item.path) && (
+                <span className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full" />
+              )}
+            </Link>
+          ))}
         </nav>
       </aside>
 
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-black/10 z-30 sm:hidden"
+          className="fixed inset-0 bg-black/30 z-30 sm:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -93,7 +117,7 @@ function Navbar() {
           px-4
           flex
           items-center
-          justify-end
+          justify-between
           gap-10
           border-b
           border-gray-200
@@ -102,23 +126,28 @@ function Navbar() {
         "
       >
         <button
-          className="sm:hidden text-2xl mr-auto"
+          className="sm:hidden text-2xl text-gray-700 hover:text-azulescuro transition-colors"
           onClick={() => setMenuOpen(true)}
+          aria-label="Abrir menu"
         >
           ☰
         </button>
 
-        <img src={notification} alt="Notificações" className="h-5" />
-
-        <div className="flex items-center gap-2">
-          <span className="text-right leading-tight">
-            <p>Admin User</p>
-            <p className="text-sm text-gray-600">Admin@educ.com</p>
-          </span>
-
-          <span className="h-8 w-8 rounded-full bg-blue-200 flex items-center justify-center">
-            <img src={user} alt="User" className="h-4" />
-          </span>
+        <div className="flex items-center gap-6 ml-auto">
+          <button className="relative hover:scale-110 transition-transform" aria-label="Notificações">
+            <img src={notification} alt="Notificações" className="h-5" />
+            <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></span>
+          </button>
+          
+          <div className="flex items-center gap-3">
+            <span className="text-right leading-tight hidden md:block">
+              <p className="font-medium text-gray-800">Admin User</p>
+              <p className="text-sm text-gray-600">Admin@educ.com</p>
+            </span>
+            <button className="h-10 w-10 rounded-full bg-blue-200 flex items-center justify-center hover:bg-blue-300 transition-colors">
+              <img src={user} alt="User" className="h-5" />
+            </button>
+          </div>
         </div>
       </header>
     </>
