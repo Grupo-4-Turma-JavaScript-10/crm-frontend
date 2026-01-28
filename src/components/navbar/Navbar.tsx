@@ -13,139 +13,93 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   return (
-    <div className="flex">
+    <>
       <aside
         className={`
-          flex 
-          flex-col 
-          h-screen 
-          fixed md:static
-          transition-transform duration-300
-          sm:translate-x-0
-          z-2
-          border-r border-gray-200
-          ${menuOpen ? "translate-x-0" : "-translate-x-full"}
+          fixed
+          top-0
+          left-0
+          h-screen
+          w-[200px]
+          flex
+          flex-col
+          border-r
+          border-gray-200
+          bg-white
+          z-40
+          transition-transform
+          duration-300
+          ${menuOpen ? "translate-x-0" : "-translate-x-full sm:translate-x-0"}
         `}
       >
         <div
-          className={`
-            flex 
-            flex-col
+          className="
+            h-40
+            flex
+            items-center
+            justify-center
             bg-no-repeat
             bg-top
             bg-contain
             overflow-hidden
-          `}
+          "
           style={{ backgroundImage: `url(${canto})` }}
         >
           <img
             src={logo}
             alt="PathEduc Logo"
-            className={`
-              min-w-50 
-              w-50
-              scale-150
-            `}
+            className="w-36"
           />
         </div>
 
-        <nav>
-          <div
-            className={`
-              flex 
-              items-center
-              p-3
-              text-lg
-              gap-4 
-              hover:bg-azulescuro
-              hover:text-white
-              rounded-xl
-              transition-all
-              duration-300
-              ease-in-out
-            `}
-          >
-            <img src={dashIco} alt="Dashboard Icon" className="w-7" />
+        <nav className="flex flex-col gap-1 px-3">
+          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
+            <img src={dashIco} alt="Dashboard" className="w-7" />
             <h2>Dashboard</h2>
           </div>
 
-          <div
-            className={`
-              flex 
-              items-center 
-              p-4 
-              text-lg 
-              gap-4
-              hover:bg-azulescuro
-              hover:text-white
-              rounded-xl
-              transition-all
-              duration-300
-              ease-in-out
-            `}
-          >
+          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
             <img src={estudantes} alt="Estudantes" className="w-7 scale-75" />
             <h2>Estudantes</h2>
           </div>
 
-          <div
-            className={`
-              flex 
-              items-center 
-              p-4 
-              text-lg 
-              gap-4
-              hover:bg-azulescuro
-              hover:text-white
-              rounded-xl
-              transition-all
-              duration-300
-              ease-in-out
-            `}
-          >
+          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
             <img src={bolsa} alt="Bolsas" className="w-7 scale-75" />
             <h2>Bolsas</h2>
           </div>
 
-          <div
-            className={`
-              flex 
-              items-center 
-              p-4 
-              text-lg 
-              gap-4
-              hover:bg-azulescuro
-              hover:text-white
-              rounded-xl
-              transition-all
-              duration-300
-              ease-in-out
-            `}
-          >
-            <img src={vinculo} alt="Vinculo" className="w-7 scale-75" />
-            <h2>Vinculos</h2>
+          <div className="flex items-center gap-4 p-3 rounded-xl text-lg hover:bg-azulescuro hover:text-white transition">
+            <img src={vinculo} alt="Vínculos" className="w-7 scale-75" />
+            <h2>Vínculos</h2>
           </div>
         </nav>
       </aside>
 
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-black/10 z-0 sm:hidden"
+          className="fixed inset-0 bg-black/10 z-30 sm:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
 
       <header
-        className={`
+        className="
+          fixed
+          top-0
+          left-0
+          sm:left-[200px]
+          right-0
+          h-16
+          px-4
           flex
-          p-3
           items-center
-          gap-10
-          h-min
-          w-full
           justify-end
-          border-b border-gray-200
-        `}
+          gap-10
+          border-b
+          border-gray-200
+          bg-white
+          z-50
+        "
       >
         <button
           className="sm:hidden text-2xl mr-auto"
@@ -157,27 +111,17 @@ function Navbar() {
         <img src={notification} alt="Notificações" className="h-5" />
 
         <div className="flex items-center gap-2">
-          <span className="text-right">
+          <span className="text-right leading-tight">
             <p>Admin User</p>
-            <p className="text-gray-600 text-sm">Admin@educ.com</p>
+            <p className="text-sm text-gray-600">Admin@educ.com</p>
           </span>
 
-          <span
-            className={`
-              rounded-full
-              bg-blue-200
-              h-8
-              aspect-square
-              flex
-              justify-center
-              items-center
-            `}
-          >
+          <span className="h-8 w-8 rounded-full bg-blue-200 flex items-center justify-center">
             <img src={user} alt="User" className="h-4" />
           </span>
         </div>
       </header>
-    </div>
+    </>
   )
 }
 
