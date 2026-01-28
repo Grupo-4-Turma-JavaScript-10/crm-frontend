@@ -47,6 +47,9 @@ function Navbar() {
               hover:bg-azulescuro
               hover:text-white
               rounded-xl
+              transition-all
+              duration-300
+              ease-in-out
             `}>
             <img src={dashIco} alt="Dashboard Icon" className={`
                 w-7
@@ -62,6 +65,9 @@ function Navbar() {
               hover:bg-azulescuro
               hover:text-white
               rounded-xl
+              transition-all
+              duration-300
+              ease-in-out
             `}>
             <img src={estudantes} alt="Estudantes" className={`
                 w-7 scale-75
@@ -77,6 +83,10 @@ function Navbar() {
               hover:bg-azulescuro
               hover:text-white
               rounded-xl
+              transition-all
+              transition-all
+              duration-300
+              ease-in-out
             `}>
             <img src={bolsa} alt="Bolsas" className={`
                 w-7 
@@ -93,6 +103,10 @@ function Navbar() {
               hover:bg-azulescuro
               hover:text-white
               rounded-xl
+              transition-all
+              transition-all
+              duration-300
+              ease-in-out
             `}>
             <img src={vinculo} alt="Vinculo" className={`
                 w-7 
