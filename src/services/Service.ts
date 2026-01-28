@@ -1,44 +1,54 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:4000",
+    baseURL: import.meta.env.VITE_API_URL,
 });
 
-export const buscar = async (url: string, setDados: Function) => {
-  const resposta = await api.get(url);
-  setDados(resposta.data);
+export const buscar = async (
+    url: string,
+    setDados: Function,
+    header: object
+) => {
+    const resposta = await api.get(url, header);
+    setDados(resposta.data);
 };
 
-export const buscarDireto = async (url: string) => {
-  const resposta = await api.get(url);
-  return resposta.data;
+export const buscarDireto = async (url: string, header: object) => {
+    const resposta = await api.get(url, header);
+    return resposta.data;
 };
 
 export const cadastrar = async (
-  url: string,
-  dados: object,
-  setDados?: Function
+    url: string,
+    dados: object,
+    setDados: Function,
+    header: object
 ) => {
-  const resposta = await api.post(url, dados);
-  if (setDados) setDados(resposta.data);
-  return resposta.data;
+    const resposta = await api.post(url, dados, header);
+    if (setDados) setDados(resposta.data);
+    return resposta.data;
 };
 
 export const atualizar = async (
-  url: string,
-  dados: object,
-  setDados?: Function
+    url: string,
+    dados: object,
+    setDados: Function,
+    header: object
 ) => {
-  const resposta = await api.put(url, dados);
-  if (setDados) setDados(resposta.data);
-  return resposta.data;
+    const resposta = await api.put(url, dados, header);
+    if (setDados) setDados(resposta.data);
+    return resposta.data;
 };
 
-export const atualizarStatus = async (url: string, dados: object) => {
-  const resposta = await api.patch(url, dados);
-  return resposta.data;
+export const atualizarStatus = async (
+    url: string,
+    dados: object,
+    header: object
+) => {
+    const resposta = await api.patch(url, dados, header);
+    return resposta.data;
 };
 
-export const deletar = async (url: string) => {
-  await api.delete(url);
+export const deletar = async (url: string, header: object) => {
+    await api.delete(url, header);
 };
