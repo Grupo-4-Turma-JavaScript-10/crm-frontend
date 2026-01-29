@@ -8,5 +8,5 @@ export default interface Bolsa {
     curso: string;
     validade: string;
     ativa: boolean;
-    Estudante?: Estudantes[];
+    estudante?: Estudantes[];
 }

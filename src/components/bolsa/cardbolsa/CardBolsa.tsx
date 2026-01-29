@@ -29,7 +29,7 @@ function CardBolsa({ bolsa }: CardBolsaProps) {
             </span>
 
             <span className="text-gray-600">
-                {bolsa.Estudante?.length|| 0} estudante(s)
+                {bolsa.estudante?.length|| 0} estudante(s)
             </span>
 
             <div className="flex gap-2 justify-end">

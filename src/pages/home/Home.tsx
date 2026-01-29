@@ -1,12 +1,12 @@
 import { useEffect, useState } from "react";
 import { StatCard } from "../../components/dashboard/StatCard";
-import { RecentActivity } from "../../components/dashboard/RecentActivity";
 import { PopularScholarships } from "../../components/dashboard/PopularScholarships";
 import { buscar } from "../../services/Service";
 import { Users, GraduationCap, Link, UserX } from "lucide-react";
 import type Bolsa from "../../models/Bolsa";
 import type Estudante from "../../models/Estudantes";
 import { ToastAlerta } from "../../utils/ToastAlerta";
+import { DashboardBanner } from "../../components/dashboard/DashboardBanner";
 
 export function Home() {
   const [bolsas, setBolsas] = useState<Bolsa[]>([]);
@@ -32,13 +32,13 @@ export function Home() {
   const totalBolsas = bolsas.length;
   const bolsasAtivas = bolsas.filter(b => b.ativa).length;
   const alunosComBolsa = estudantes.filter(e =>
-    e.bolsaId != null && bolsas.some(b => b.id === e.bolsaId)
+    e.bolsa != null && bolsas.some(b => b.id === e.bolsa?.id)
   ).length;
-  const alunosInativos = estudantes.filter(e => !e.ativa).length;
+  const alunosInativos = estudantes.filter(e => !e.ativo).length;
 
   const bolsasComContagem = bolsas.map(b => ({
     ...b,
-    students: estudantes.filter(e => e.bolsaId === b.id).length,
+    students: estudantes.filter(e => e.bolsa?.id === b.id).length,
   }));
 
   return (
@@ -87,7 +87,7 @@ export function Home() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <RecentActivity />
+        <DashboardBanner />
         <PopularScholarships bolsas={bolsasComContagem} />
       </div>
     </main>
