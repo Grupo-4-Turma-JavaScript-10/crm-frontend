@@ -88,9 +88,7 @@ function Navbar() {
                 className={`w-7 ${item.label !== "Dashboard" ? "scale-75" : ""}`}
               />
               <h2>{item.label}</h2>
-              {isActive(item.path) && (
-                <span className="absolute left-0 top-0 bottom-0 w-1 bg-white rounded-r-full" />
-              )}
+              
             </Link>
           ))}
         </nav>

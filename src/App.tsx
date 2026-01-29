@@ -15,7 +15,7 @@ function App() {
       <ToastContainer />
       <BrowserRouter>
         <Navbar />       
-        <main className="sm:ml-50 top-16 fixed left-0 right-0 bottom-0 border border-gray-500 rounded-tl-lg overflow-auto">
+        <main className="sm:ml-50 sm:rounded-tr-none top-16 fixed left-0 right-0 bottom-0 border border-gray-500 rounded-t-lg overflow-auto">
           <Routes>
             <Route path='/home' element={<Home/>} /> 
             <Route path='/' element={<Home/>} />
