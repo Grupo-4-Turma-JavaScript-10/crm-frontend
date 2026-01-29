@@ -1,56 +1,159 @@
-Sistema de Gestão CRM
+![alt text](image.png)
 
-Um sistema de gestão de estudantes e bolsas desenvolvido com React e TailwindCSS, permitindo gerenciar informações de estudantes e controlar bolsas de forma prática e visual.
+🚀 CRM de Estudantes e Bolsas
 
-O frontend consome uma API RESTful externa para persistência de dados.
+Frontend: React + TypeScript + Vite + TailwindCSS
+
+✨ Uma aplicação moderna e elegante para gerenciamento de estudantes e controle de bolsas, oferecendo uma interface intuitiva, responsiva e rápida.
+
+📋 Visão Geral
+
+Uma aplicação React moderna que permite gerenciar estudantes, acompanhar seu status e verificar se possuem bolsas, com uma experiência de usuário intuitiva e otimizada para desktops e dispositivos móveis.
+
+✨ Principais Funcionalidades
+
+⚡ Status do Estudante: Ativar ou inativar estudantes diretamente do card.
+
+🎯 Visualização de Bolsas: Identificação rápida de quais estudantes possuem bolsa.
+
+📝 Cadastro e Edição: Formulário para criar ou editar estudantes.
+
+🗑️ Exclusão: Remover estudantes com um clique.
+
+🚀 Interface Responsiva: Funciona perfeitamente em diferentes tamanhos de tela.
+
+🎨 UI Clean e Intuitiva: Cards com informações claras e ícones interativos para ações.
+
+🛠️ Tecnologias
+
+React – Biblioteca para construção de interfaces dinâmicas.
+
+TypeScript – Tipagem estática para segurança e melhor manutenção do código.
+
+Vite – Build tool ultrarrápido com desenvolvimento otimizado.
+
+TailwindCSS – Framework utilitário para estilização moderna e consistente.
+
+Axios – Para requisições HTTP ao backend.
+
+React Router – Navegação entre páginas.
+
+React Icons – Ícones para ações de edição e exclusão.
+
+🚀 Como Executar Localmente
+📋 Pré-requisitos
+
+Certifique-se de ter instalado:
+
+Node.js v16.0.0 ou superior
+
+npm v7.0.0 ou superior
+
+Verifique as versões:
+
+node --version   # v18.x.x
+npm --version    # v9.x.x
+
+📥 Instalação
+
+1️⃣ Clone o repositório:
+
+git clone <url-do-repositorio>
+cd crm-frontend
 
 
-Funcionalidades
+2️⃣ Instale as dependências:
 
-Cadastro, edição e exclusão de estudantes.
+npm install
 
-Controle do status do estudante (ativo/inativo).
+▶️ Executando o Projeto
 
-Visualização de quais estudantes possuem bolsa.
+Inicie o servidor de desenvolvimento:
 
-Interface intuitiva com cards de estudantes, mostrando informações detalhadas: nome, email, idade, endereço e bolsa.
-
-Ícones interativos para editar e deletar estudantes.
+npm run dev
 
 
-Tecnologias
+A aplicação estará disponível em:
 
-Frontend: React, TypeScript, TailwindCSS, React Router
+http://localhost:5173
 
-Componentes: react-icons (para ícones de edição e exclusão), react-spinners (para loading)
+📦 Scripts Disponíveis
 
-Serviços: Axios para requisições HTTP
+| Comando           | Descrição              | Uso                   |
+| ----------------- | ---------------------- | --------------------- |
+| `npm run dev`     | 🔄 Dev com hot reload  | Desenvolvimento local |
+| `npm run build`   | 📦 Build para produção | Deploy em servidor    |
+| `npm run preview` | 👀 Visualiza a build   | Teste antes de deploy |
+| `npm run lint`    | ✅ Verifica código      | Qualidade de código   |
 
-Backend: API RESTful externa (Node.js/NestJS/MySQL ou outra)
 
-Como usar
+📁 Estrutura do Projeto
 
-Visualizar estudantes:
+crm-frontend/
+│
+├── src/
+│   ├── components/          # Componentes Reutilizáveis (CardEstudante, FormEstudante)
+│   ├── pages/               # Páginas (ListarEstudantes, EditarEstudante, DeletarEstudante)
+│   ├── models/              # Tipos/Interfaces (Estudante.ts, Bolsa.ts)
+│   ├── services/            # Serviços de API (Axios)
+│   ├── assets/              # Recursos estáticos (imagens, avatares)
+│   ├── utils/               # Funções utilitárias (ToastAlerta)
+│   ├── App.tsx              # Componente raiz
+│   ├── main.tsx             # Ponto de entrada
+│   └── index.css / App.css  # Estilos globais
+│
+├── public/                  # Arquivos públicos
+├── package.json             # Dependências
+├── vite.config.ts           # Configuração Vite
+├── tsconfig.json            # Configuração TypeScript
+└── README.md                # Este arquivo
 
-A tela inicial mostra uma lista de estudantes com informações básicas: nome, email, idade, endereço e se possui bolsa.
 
-Alterar status do estudante:
+💡 Boas Práticas
 
-Use o select de status no card do estudante para ativar ou inativar o registro.
+✅ Componentes devem usar PascalCase (CardEstudante.tsx)
 
-Editar estudante:
+✅ Utilize TypeScript para melhor tipagem
 
-Clique no ícone de lápis para navegar até o formulário de edição do estudante.
+✅ Mantenha componentes pequenos e focados
 
-Excluir estudante:
+✅ Use Tailwind CSS para consistência
 
-Clique no ícone de lixeira para remover o estudante.
+✅ Siga as regras do ESLint
 
-Licença
+✅ Exportações nomeadas para melhor importação
+
+🔧 Configurações Importantes
+Tailwind CSS
+
+Estilos aplicados via classes utilitárias. Configure tailwind.config.js conforme necessidade do projeto.
+
+TypeScript
+
+Projeto em strict mode. Sempre adicione tipos para funções, props e variáveis.
+
+ESLint
+
+Use npm run lint regularmente para manter a qualidade do código.
+
+📄 Licença
 
 Este projeto está licenciado sob a MIT License – veja o arquivo LICENSE
  para detalhes.
 
-Screenshots
+👩‍💻 Equipe de Desenvolvimento
 
-![alt text](image.png)
+Este projeto foi desenvolvido pelo Grupo 4 da Turma JavaScript 10:
+
+Gabrieli Martins – Membro
+
+Kauã Gabriel de Farias – Membro
+
+Assis Pires Neto – Membro
+
+Lilia – Membro
+
+Patrícia Souza – Membro
+
+Pedro – Membro
+
