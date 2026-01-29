@@ -16,7 +16,7 @@ function DeletarBolsa() {
 
     async function buscarPorId(id: string) {
         try {
-            await buscar(`/bolsas/${id}`, setBolsa, {});
+            await buscar(`/bolsa/${id}`, setBolsa, {});
         } catch (error: any) {
             ToastAlerta('Erro ao buscar bolsa', 'erro');
         }
@@ -46,7 +46,7 @@ function DeletarBolsa() {
         setIsLoading(true);
         
         try {
-            await deletar(`/bolsas/${id}`, {});
+            await deletar(`/bolsa/${id}`, {});
             ToastAlerta('Bolsa deletada com sucesso', 'sucesso');
         } catch (error: any) {
             ToastAlerta('Erro ao deletar bolsa', 'erro');
@@ -98,8 +98,8 @@ function DeletarBolsa() {
                                 <span className="text-gray-900">{bolsa.instituicao}</span>
                             </p>
                             <p className="text-sm">
-                                <span className="font-medium text-gray-700">Percentual:</span>{' '}
-                                <span className="text-gray-900">{bolsa.percentual}%</span>
+                                <span className="font-medium text-gray-700">porcentagem:</span>{' '}
+                                <span className="text-gray-900">{bolsa.porcentagem}%</span>
                             </p>
                             <p className="text-sm">
                                 <span className="font-medium text-gray-700">Curso:</span>{' '}

@@ -19,7 +19,7 @@ function ListaBolsas() {
     async function buscarBolsas() {
         try {
             setIsLoading(true);
-            await buscar("/bolsas", setBolsas, {});
+            await buscar("/bolsa", setBolsas, {});
         } catch (error: any) {
             ToastAlerta('Erro ao buscar bolsas', 'erro');
         } finally {
@@ -28,7 +28,7 @@ function ListaBolsas() {
     }
 
     function handleCreate() {
-        navigate('/cadastrabolsa');
+        navigate('/bolsascadastrar');
     }
 
     return (

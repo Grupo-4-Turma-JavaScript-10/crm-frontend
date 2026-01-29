@@ -19,9 +19,9 @@ function CardBolsa({ bolsa }: CardBolsaProps) {
                 {bolsa.instituicao}
             </span>
 
-            {/* Percentual */}
+            {/* Porcentagem */}
             <span className="font-semibold text-blue-600">
-                {bolsa.percentual}%
+                {bolsa.porcentagem}%
             </span>
 
             {/* Curso */}

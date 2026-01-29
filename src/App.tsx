@@ -22,8 +22,7 @@ function App() {
             <Route path='/sobre' element={<Sobre/>} />
             <Route path='/bolsas' element={<ListaBolsas/>} />
             <Route path='/bolsascadastrar' element={<FormBolsa/>} />
-            <Route path='/bolsaseditar/:id' element={<FormBolsa/>} />
-            <Route path='/bolsasdeletar/:id' element={<DeletarBolsa/>} />
+            <Route path='/editarbolsa/:id' element={<FormBolsa/>} />
             <Route path='/deletarbolsa/:id' element={<DeletarBolsa/>} />
           </Routes>
         </main>

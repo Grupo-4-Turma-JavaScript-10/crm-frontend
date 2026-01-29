@@ -14,7 +14,7 @@ export function FormBolsa() {
 
     async function buscarPorId(id: string) {
         try {
-            await buscar(`/bolsas/${id}`, setBolsa, {});
+            await buscar(`/bolsa/${id}`, setBolsa, {});
         } catch (error: any) {
             ToastAlerta('Erro ao buscar bolsa', 'erro');
         }
@@ -34,10 +34,12 @@ export function FormBolsa() {
 
         setBolsa(prev => ({
             ...prev,
-            [name]: type === 'number' ? Number(value) :
-                type === 'checkbox' ? checked :
-                    type === 'date' ? new Date(value) :
-                        value
+            [name]:
+                type === 'number'
+                    ? Number(value)
+                    : type === 'checkbox'
+                        ? checked
+                        : value,
         }));
     }
 
@@ -54,14 +56,14 @@ export function FormBolsa() {
 
         if (id !== undefined) {
             try {
-                await atualizar(`/bolsas`, bolsaData, setBolsa, {});
+                await atualizar(`/bolsa`, bolsaData, setBolsa, {});
                 ToastAlerta('Bolsa atualizada com sucesso', 'sucesso');
             } catch (error: any) {
                 ToastAlerta('Erro ao atualizar bolsa', 'erro');
             }
         } else {
             try {
-                await cadastrar(`/bolsas`, bolsaData, setBolsa, {});
+                await cadastrar(`/bolsa`, bolsaData, setBolsa, {});
                 ToastAlerta('Bolsa cadastrada com sucesso', 'sucesso');
             } catch (error: any) {
                 ToastAlerta('Erro ao cadastrar bolsa', 'erro');
@@ -113,17 +115,17 @@ export function FormBolsa() {
                         />
                     </div>
 
-                    {/* Percentual */}
+                    {/* Porcentagem */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
-                            Percentual de Bolsa (%)
+                            Porcentagem de Bolsa (%)
                         </label>
                         <input
                             type="number"
-                            name="percentual"
+                            name="porcentagem"
                             min={0}
                             max={100}
-                            value={bolsa.percentual || 0}
+                            value={bolsa.porcentagem || 0}
                             onChange={handleChange}
                             required
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
@@ -154,7 +156,7 @@ export function FormBolsa() {
                         <input
                             type="date"
                             name="validade"
-                            value={bolsa.validade ? new Date(bolsa.validade).toISOString().split('T')[0] : ''}
+                            value={bolsa.validade ?? ''}
                             onChange={handleChange}
                             required
                             className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-600"
