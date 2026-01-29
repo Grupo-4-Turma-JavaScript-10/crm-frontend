@@ -7,7 +7,12 @@ import AvatarSelector from "../../../assets/avatar/AvatarSelector";
 import { ToastAlerta } from "../../../utils/ToastAlerta";
 import { cadastrar, atualizar, buscarDireto } from "../../../services/Service";
 
-function FormEstudante() {
+interface FormProps {
+  onSuccess?: () => void;
+  estudanteInicial?: Estudantes;
+}
+
+export default function FormEstudante({ onSuccess, estudanteInicial }: FormProps) {
   const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
@@ -24,15 +29,15 @@ function FormEstudante() {
     cursoInteresse: "",
     ativo: true,
     avatar: "adventurer",
-    bolsa: null, // Bolsa começa como null
+    bolsa: undefined, // objeto completo
+    ...estudanteInicial,
   });
 
-  // Carregar bolsas do backend
+  // Carregar bolsas
   useEffect(() => {
     async function carregarBolsas() {
       try {
-        const bolsas: Bolsa[] = await buscarDireto("/bolsa", {});
-        console.log("Bolsas carregadas:", bolsas); // Debug
+        const bolsas: Bolsa[] = await buscarDireto("/bolsa");
         setBolsasDisponiveis(bolsas);
       } catch (error) {
         console.error("Erro ao carregar bolsas:", error);
@@ -41,12 +46,12 @@ function FormEstudante() {
     carregarBolsas();
   }, []);
 
-  // Carregar estudante se estiver editando
+  // Carregar estudante para edição
   useEffect(() => {
+    if (!id) return;
     async function carregarEstudante() {
-      if (!id) return;
       try {
-        const dados: Estudantes = await buscarDireto(`/estudante/${id}`, {});
+        const dados: Estudantes = await buscarDireto(`/estudante/${id}`);
         setEstudante(dados);
       } catch (error) {
         console.error("Erro ao carregar estudante:", error);
@@ -55,52 +60,48 @@ function FormEstudante() {
     carregarEstudante();
   }, [id]);
 
+  // Atualiza campos genéricos
   function atualizarEstado(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
-    setEstudante({
-      ...estudante,
-      [name]:
-        name === "idade"
-          ? Number(value)
-          : name === "ativo"
-          ? value === "true"
-          : value,
-    });
+    let novoValor: any = value;
+
+    if (name === "idade") novoValor = Number(value);
+    if (name === "ativo") novoValor = value === "true";
+
+    setEstudante({ ...estudante, [name]: novoValor });
   }
 
-  // Seleção de bolsa
+  // Atualiza bolsa selecionada
   function handleBolsaChange(e: ChangeEvent<HTMLSelectElement>) {
-    const value = e.target.value;
-    const selecionada =
-      bolsasDisponiveis.find((b) => b.id === Number(value)) ?? null;
+    const selecionada = bolsasDisponiveis.find((b) => b.id === Number(e.target.value)) ?? undefined;
     setEstudante({ ...estudante, bolsa: selecionada });
   }
 
+  // Salvar estudante (cadastro ou atualização)
   async function salvarEstudante(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     setIsLoading(true);
 
     try {
+      // Payload enviado ao backend
       const payload = {
         ...estudante,
-        bolsaId: estudante.bolsa?.id ?? null, // evita NaN
+        bolsaId: estudante.bolsa?.id ?? null, // apenas o id para o backend
       };
 
-      if (id) {
-        await atualizar("/estudante", payload, setEstudante, {});
+      if (id || estudante.id) {
+        await atualizar("/estudante", payload);
         ToastAlerta("Estudante atualizado com sucesso!", "success");
       } else {
-        await cadastrar("/estudante", payload, setEstudante, {});
+        await cadastrar("/estudante", payload);
         ToastAlerta("Estudante cadastrado com sucesso!", "success");
       }
 
-      navigate("/estudante");
+      // Atualiza lista ou navega
+      onSuccess ? onSuccess() : navigate("/estudante");
     } catch (error) {
       console.error(error);
-      ToastAlerta(
-        id ? "Erro ao atualizar estudante." : "Erro ao cadastrar estudante.",
-        "error"
-      );
+      ToastAlerta(id ? "Erro ao atualizar estudante." : "Erro ao cadastrar estudante.", "error");
     } finally {
       setIsLoading(false);
     }
@@ -108,12 +109,9 @@ function FormEstudante() {
 
   return (
     <div className="container flex flex-col mx-auto items-center">
-      {/* Avatar */}
       <div className="flex flex-col items-center mb-6">
         <img
-          src={`https://api.dicebear.com/7.x/${estudante.avatar}/svg?seed=${
-            estudante.nome || "User"
-          }`}
+          src={`https://api.dicebear.com/7.x/${estudante.avatar}/svg?seed=${estudante.nome || "User"}`}
           alt="Avatar"
           onClick={() => setModalOpen(true)}
           className="w-24 h-24 rounded-full border-4 border-dourado cursor-pointer hover:scale-105 transition"
@@ -121,130 +119,45 @@ function FormEstudante() {
         <p className="text-sm mt-2 text-azulescuro">Clique para escolher</p>
       </div>
 
-      <form
-        className="flex flex-col gap-4 w-full max-w-md"
-        onSubmit={salvarEstudante}
-      >
-        {/* Nome */}
-        <div className="flex flex-col gap-2">
-          <label>Nome</label>
-          <input
-            type="text"
-            name="nome"
-            placeholder="Nome do estudante"
-            value={estudante.nome}
-            onChange={atualizarEstado}
-            required
-            className="border-2 border-azulescuro rounded p-2"
-          />
-        </div>
+      <form className="flex flex-col gap-4 w-full max-w-md" onSubmit={salvarEstudante}>
+        <input type="text" name="nome" placeholder="Nome" value={estudante.nome} onChange={atualizarEstado} required className="border-2 border-azulescuro rounded p-2"/>
+        <input type="email" name="email" placeholder="Email" value={estudante.email} onChange={atualizarEstado} required className="border-2 border-azulescuro rounded p-2"/>
+        <input type="text" name="endereco" placeholder="Endereço" value={estudante.endereco} onChange={atualizarEstado} required className="border-2 border-azulescuro rounded p-2"/>
+       <input
+  type="number"
+  name="idade"
+  placeholder="Idade"
+  value={estudante.idade || ""}
+  onChange={atualizarEstado}
+  required
+  className="border-2 border-azulescuro rounded p-2"
+/>
 
-        {/* Email */}
-        <div className="flex flex-col gap-2">
-          <label>Email</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Email do estudante"
-            value={estudante.email || ""}
-            onChange={atualizarEstado}
-            required
-            className="border-2 border-azulescuro rounded p-2"
-          />
-        </div>
+        <input type="text" name="cursoInteresse" placeholder="Curso" value={estudante.cursoInteresse} onChange={atualizarEstado} required className="border-2 border-azulescuro rounded p-2"/>
 
-        {/* Endereço */}
-        <div className="flex flex-col gap-2">
-          <label>Endereço</label>
-          <input
-            type="text"
-            name="endereco"
-            placeholder="Endereço do estudante"
-            value={estudante.endereco || ""}
-            onChange={atualizarEstado}
-            required
-            className="border-2 border-azulescuro rounded p-2"
-          />
-        </div>
+        <select name="ativo" value={String(estudante.ativo)} onChange={atualizarEstado} className="border-2 border-azulescuro rounded p-2">
+          <option value="true">Sim</option>
+          <option value="false">Não</option>
+        </select>
 
-        {/* Idade */}
-        <div className="flex flex-col gap-2">
-          <label>Idade</label>
-          <input
-            type="number"
-            name="idade"
-            placeholder="Idade do estudante"
-            value={estudante.idade || ""}
-            onChange={atualizarEstado}
-            required
-            className="border-2 border-azulescuro rounded p-2"
-          />
-        </div>
+        <select name="bolsa" value={estudante.bolsa?.id ?? ""} onChange={handleBolsaChange} className="border-2 border-azulescuro rounded p-2">
+          <option value="">-- Nenhuma --</option>
+          {bolsasDisponiveis.map((b) => (
+            <option key={b.id} value={b.id}>{b.nome}</option>
+          ))}
+        </select>
 
-        {/* Curso */}
-        <div className="flex flex-col gap-2">
-          <label>Curso</label>
-          <input
-            type="text"
-            name="cursoInteresse"
-            placeholder="Curso de interesse"
-            value={estudante.cursoInteresse || ""}
-            onChange={atualizarEstado}
-            required
-            className="border-2 border-azulescuro rounded p-2"
-          />
-        </div>
-
-        {/* Ativo */}
-        <div className="flex flex-col gap-2">
-          <label>Estudante ativo?</label>
-          <select
-            name="ativo"
-            value={String(estudante.ativo)}
-            onChange={atualizarEstado}
-            className="border-2 border-azulescuro rounded p-2"
-          >
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
-          </select>
-        </div>
-
-        {/* Bolsa */}
-        <div className="flex flex-col gap-2">
-          <label>Bolsa</label>
-          <select
-            name="bolsa"
-            value={estudante.bolsa?.id ?? ""}
-            onChange={handleBolsaChange}
-            className="border-2 border-azulescuro rounded p-2"
-          >
-            <option value="">-- Nenhuma --</option>
-            {bolsasDisponiveis.map((b) => (
-              <option key={b.id} value={b.id}>
-                {b.nome}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <button
-          type="submit"
-          disabled={isLoading}
-          className="mt-4 bg-azulescuro text-white py-2 rounded-lg hover:bg-dourado hover:text-preto transition flex justify-center"
-        >
-          {isLoading ? <ClipLoader color="#ffffff" size={20} /> : id ? "Atualizar" : "Cadastrar"}
+        <button type="submit" disabled={isLoading} className="mt-4 bg-azulescuro text-white py-2 rounded-lg hover:bg-dourado hover:text-preto transition flex justify-center">
+          {isLoading ? <ClipLoader color="#ffffff" size={20}/> : id ? "Atualizar" : "Cadastrar"}
         </button>
       </form>
 
-      {/* Modal Avatar */}
       <AvatarSelector
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
-        onSelect={(estilo) => setEstudante({ ...estudante, avatar: estilo })}
+        onSelect={(estilo) => setEstudante({...estudante, avatar: estilo})}
         nome={estudante.nome}
       />
     </div>
   );
 }
-
-export default FormEstudante;

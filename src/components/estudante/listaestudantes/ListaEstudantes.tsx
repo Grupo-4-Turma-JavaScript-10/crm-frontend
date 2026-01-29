@@ -17,7 +17,8 @@ function ListaEstudantes() {
   async function carregarEstudantes() {
     try {
       setIsLoading(true);
-      await buscar("/estudante", setEstudantes, {});
+      const response = await buscar("/estudante");
+      setEstudantes(response.data);
     } catch (error) {
       console.error("Erro ao buscar estudantes", error);
       ToastAlerta("Erro ao carregar estudantes.", "error");
@@ -28,27 +29,31 @@ function ListaEstudantes() {
   }
 
   return (
-    <div className="container mx-auto flex flex-col gap-6">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-bold text-azulescuro">
+    <div className="container mx-auto px-4 py-8 flex flex-col gap-8">
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+        <h2 className="text-3xl md:text-4xl font-bold text-azulescuro">
           Lista de Estudantes
         </h2>
-        <ModalEstudante onSuccess={carregarEstudantes} />
+        <ModalEstudante
+          onSuccess={carregarEstudantes}
+          buttonClassName="bg-dourado text-preto hover:bg-azulescuro hover:text-white px-4 py-2 rounded transition"
+        />
       </div>
-
       {isLoading && (
-        <div className="flex justify-center w-full my-8">
+        <div className="flex justify-center w-full my-12">
           <SyncLoader color="#1E40AF" size={32} />
         </div>
       )}
 
       {!isLoading && estudantes.length === 0 && (
-        <span className="text-3xl text-center my-8 text-azulescuro">
-          Nenhum estudante foi encontrado!
-        </span>
+        <div className="flex justify-center w-full my-12">
+          <span className="text-xl md:text-2xl font-medium text-azulescuro text-center">
+            Nenhum estudante foi encontrado!
+          </span>
+        </div>
       )}
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {estudantes.map((estudante) => (
           <CardEstudante
             key={estudante.id}
