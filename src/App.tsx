@@ -1,35 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css';
+import Navbar from './components/navbar/Navbar';
+import { Home } from './pages/home/Home';
+import Sobre from './pages/sobrenos/SobreNos';
+import { FormBolsa } from './components/bolsa/formbolsa/FormBolsa';
+import ListaBolsas from './components/bolsa/listabolsas/ListaBolsas';
+import DeletarBolsa from './components/bolsa/deletarbolsa/DeletarBolsa';
+import ListaEstudantes from './components/estudante/listaestudantes/ListaEstudantes';
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <ToastContainer />
+      <BrowserRouter>
+        <Navbar />       
+        <main className="sm:ml-50 sm:rounded-tr-none top-16 fixed left-0 right-0 bottom-0 border border-gray-500 rounded-t-lg overflow-auto">
+          <Routes>
+            <Route path='/home' element={<Home/>} /> 
+            <Route path='/' element={<Home/>} />
+            <Route path='/sobre' element={<Sobre/>} />
+            <Route path='/bolsas' element={<ListaBolsas/>} />
+            <Route path='/bolsascadastrar' element={<FormBolsa/>} />
+            <Route path='/editarbolsa/:id' element={<FormBolsa/>} />
+            <Route path='/deletarbolsa/:id' element={<DeletarBolsa/>} />
+            <Route path='/estudantes' element={<ListaEstudantes/>} />
+          </Routes>
+        </main>
+      </BrowserRouter>
     </>
   )
 }
-
-export default App
+export default App;
