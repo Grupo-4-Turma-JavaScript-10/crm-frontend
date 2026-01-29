@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type Estudante from "../../../models/Estudantes";
-import { deletar } from "../../../services/Service";
+import { deletar, buscar } from "../../../services/Service";
 import { ClipLoader } from "react-spinners";
 import { ToastAlerta } from "../../../utils/ToastAlerta";
 
@@ -12,26 +12,27 @@ function DeletarEstudante() {
   const [isLoading, setIsLoading] = useState(false);
   const [estudante, setEstudante] = useState<Estudante | null>(null);
 
+  // Buscar estudante do backend, incluindo a bolsa
   useEffect(() => {
-    if (id) {
-      // Simulação de dados; idealmente você buscaria do backend
-      setEstudante({
-        id: Number(id),
-        nome: "Nome do Estudante",
-        email: "email@exemplo.com",
-        endereco: "Endereço Exemplo",
-        idade: 0,
-        cursoInteresse: "Curso Exemplo",
-        ativo: true,
-        avatar: "initials",
-        bolsa: false,
-      });
-    }
+    if (!id) return;
+
+    const carregarEstudante = async () => {
+      try {
+        const response = await buscar(`/estudante/${id}`);
+        setEstudante(response.data);
+      } catch (error) {
+        ToastAlerta("Erro ao carregar estudante.", "error");
+        console.error(error);
+      }
+    };
+
+    carregarEstudante();
   }, [id]);
 
   const deletarEstudante = async () => {
     if (!id) return;
     setIsLoading(true);
+
     try {
       await deletar(`/estudante/${id}`, {});
       ToastAlerta("Estudante apagado com sucesso!", "success");
@@ -82,11 +83,11 @@ function DeletarEstudante() {
             <span className="font-semibold">Curso:</span> {estudante.cursoInteresse}
           </p>
           <p>
-            <span className="font-semibold">Bolsa:</span> {estudante.bolsa ? "Sim" : "Não"}
+            <span className="font-semibold">Bolsa:</span> {estudante.bolsa ? estudante.bolsa.nome : "-"}
           </p>
         </div>
 
-        {/* Botões */}
+
         <div className="flex">
           <button
             onClick={retornar}

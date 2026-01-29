@@ -1,30 +1,33 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import type Estudantes from "../../../models/Estudantes";
-import { atualizar } from "../../../services/Service";
+import { deletar } from "../../../services/Service";
+import { Pencil, Trash2 } from "lucide-react";
+import { ToastAlerta } from "../../../utils/ToastAlerta";
 
 interface CardProps {
   estudante: Estudantes;
-  onAtualizar?: () => void;
+  onAtualizar?: () => void; 
 }
 
-function CardEstudante({ estudante, onAtualizar }: CardProps) {
-  const [status, setStatus] = useState(estudante.ativo ? "ativo" : "inativo");
+const coresAvatar = ["1E40AF", "047857", "B45309", "9D174D", "065F46", "9333EA"];
 
-  const handleStatusChange = async (novoStatus: string) => {
+export default function CardEstudante({ estudante, onAtualizar }: CardProps) {
+  const [isDeleting, setIsDeleting] = useState(false);
+  const corAvatar = coresAvatar[estudante.id % coresAvatar.length];
+
+  const handleDeletar = async () => {
+    if (!window.confirm("Tem certeza que deseja deletar este estudante?")) return;
+    setIsDeleting(true);
     try {
-      // Prepara o objeto seguro para enviar ao backend
-      const atualizado = {
-        ...estudante,
-        ativo: novoStatus === "ativo",
-        bolsaId: estudante.bolsa?.id ?? null, // <-- evita NaN
-      };
-
-      await atualizar("/estudante", atualizado, () => {}, {});
-      setStatus(novoStatus);
+      await deletar(`/estudante/${estudante.id}`, {});
+      ToastAlerta("Estudante deletado com sucesso!", "success");
       onAtualizar?.();
     } catch (error) {
-      console.error("Erro ao atualizar status:", error);
+      console.error(error);
+      ToastAlerta("Erro ao deletar estudante.", "error");
+    } finally {
+      setIsDeleting(false);
     }
   };
 
@@ -33,9 +36,9 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
       <div className="flex gap-4 p-4 items-center">
         <img
           src={
-            estudante.avatar === "initials"
-              ? `https://ui-avatars.com/api/?name=${encodeURIComponent(estudante.nome)}`
-              : estudante.avatar
+            estudante.avatar && estudante.avatar !== "initials"
+              ? estudante.avatar
+              : `https://ui-avatars.com/api/?name=${encodeURIComponent(estudante.nome)}&background=${corAvatar}&color=ffffff&size=128`
           }
           alt={estudante.nome}
           className="h-16 w-16 rounded-full object-cover border-2 border-dourado"
@@ -43,40 +46,37 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
         <div>
           <h3 className="text-lg font-bold text-azulescuro">{estudante.nome}</h3>
           <p className="text-sm font-semibold text-preto">Email: {estudante.email}</p>
-          <p className="text-sm font-semibold text-preto">
-            Curso: {estudante.cursoInteresse}
-          </p>
-          <p className="text-sm font-semibold text-preto">
-            Idade: {estudante.idade || "-"}
-          </p>
-          <p className="text-sm font-semibold text-preto">
-            Endereço: {estudante.endereco || "-"}
-          </p>
-          <p className="text-sm font-semibold text-preto">
-            Bolsa: {estudante.bolsa ? estudante.bolsa.nome : "-"}
-          </p>
+          <p className="text-sm font-semibold text-preto">Curso: {estudante.cursoInteresse}</p>
+          <p className="text-sm font-semibold text-preto">Idade: {estudante.idade || "-"}</p>
+          <p className="text-sm font-semibold text-preto">Endereço: {estudante.endereco || "-"}</p>
+          <p className="text-sm font-semibold text-preto">Bolsa: {estudante.bolsa?.nome || "-"}</p>
         </div>
       </div>
 
-      <div className="flex items-center p-2">
-        <select
-          value={status}
-          onChange={(e) => handleStatusChange(e.target.value)}
-          className="px-3 py-1 text-xs font-semibold rounded border w-fit cursor-pointer"
+      <div className="flex items-center p-2 gap-2">
+        <span
+          className={`px-2 py-1 text-xs font-semibold rounded ${
+            estudante.ativo ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+          }`}
         >
-          <option value="ativo">Ativo</option>
-          <option value="inativo">Inativo</option>
-        </select>
+          {estudante.ativo ? "Ativo" : "Inativo"}
+        </span>
 
         <Link
-          to={`/deletarEstudante/${estudante.id}`}
-          className="ml-auto bg-dourado text-preto hover:bg-red-800 hover:text-white px-4 py-1 rounded transition"
+          to={`/editarEstudante/${estudante.id}`}
+          className="flex items-center gap-1 bg-azulescuro text-white px-3 py-1 rounded hover:bg-blue-700 transition"
         >
-          Deletar
+          <Pencil size={16} /> Editar
         </Link>
+
+        <button
+          onClick={handleDeletar}
+          disabled={isDeleting}
+          className="flex items-center gap-1 ml-auto bg-dourado text-preto px-3 py-1 rounded hover:bg-red-800 hover:text-white transition"
+        >
+          {isDeleting ? "Deletando..." : <><Trash2 size={16} /> Deletar</>}
+        </button>
       </div>
     </div>
   );
 }
-
-export default CardEstudante;
