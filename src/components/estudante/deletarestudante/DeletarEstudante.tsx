@@ -1,97 +1,1 @@
-import { useState, useEffect, useContext } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import type Estudante from "../../../models/Estudantes";
-import { buscar, deletar } from "../../../services/Service";
-import { ClipLoader } from "react-spinners";
-import { ToastAlerta } from "../../../utils/ToastAlerta";
-
-function DeletarEstudante() {
-  const navigate = useNavigate();
-  const { id } = useParams<{ id: string }>();
-
-  const [isLoading, setIsLoading] = useState(false);
-  const [estudante, setEstudante] = useState<Estudante | null>(null);
-
-  // Buscar estudante
-  useEffect(() => {
-    if (!id) return;
-
-    const carregarEstudante = async () => {
-      try {
-        const response = await buscar(`/estudante/${id}`, () => {}, {});
-        setEstudante(response.data);
-      } catch (error) {
-        ToastAlerta("Erro ao carregar estudante.", "error");
-        console.error(error);
-      }
-    };
-
-    carregarEstudante();
-  }, [id]);
-
-  const deletarEstudante = async () => {
-    if (!id) return;
-
-    setIsLoading(true);
-    try {
-      await deletar(`/estudante/${id}`, {});
-      ToastAlerta("Estudante apagado com sucesso!", "success");
-      navigate("/estudante");
-    } catch (error) {
-      ToastAlerta("Erro ao deletar o estudante.", "error");
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const retornar = () => navigate("/estudante");
-
-  if (!estudante) return null;
-
-  return (
-    <main className="container w-1/3 mx-auto mt-12">
-      <h1 className="text-4xl text-center font-bold mb-6 text-azulescuro">
-        Deletar Estudante
-      </h1>
-      <p className="text-center font-semibold mb-4">
-        Tem certeza que deseja deletar este estudante?
-      </p>
-
-      <section className="border rounded-2xl overflow-hidden shadow-md flex flex-col justify-between bg-white">
-        {/* Header */}
-        <header className="bg-azulescuro text-white font-bold text-xl py-3 px-6">
-          Informações do Estudante
-        </header>
-
-        {/* Conteúdo */}
-        <div className="p-6 flex flex-col gap-3">
-          <p><strong>Nome:</strong> {estudante.nome}</p>
-          <p><strong>Email:</strong> {estudante.email}</p>
-          <p><strong>Endereço:</strong> {estudante.endereco}</p>
-          <p><strong>Idade:</strong> {estudante.idade || "-"}</p>
-          <p><strong>Curso:</strong> {estudante.cursoInteresse}</p>
-          <p><strong>Bolsa:</strong> {estudante.bolsa?.nome || "-"}</p>
-        </div>
-
-        {/* Footer */}
-        <footer className="flex gap-2">
-          <button
-            onClick={retornar}
-            className="w-full py-2 rounded bg-gray-400 hover:bg-gray-700 text-white transition"
-          >
-            Cancelar
-          </button>
-          <button
-            onClick={deletarEstudante}
-            className="w-full py-2 rounded bg-red-400 hover:bg-red-700 text-white flex items-center justify-center transition"
-          >
-            {isLoading ? <ClipLoader color="#ffffff" size={24} /> : "Deletar"}
-          </button>
-        </footer>
-      </section>
-    </main>
-  );
-}
-
-export default DeletarEstudante;
+import { useState, useEffect, useContext } from "react";import { useNavigate, useParams } from "react-router-dom";import type Estudante from "../../../models/Estudantes";import { buscar, deletar } from "../../../services/Service";import { ClipLoader } from "react-spinners";import { ToastAlerta } from "../../../utils/ToastAlerta";function DeletarEstudante() {  const navigate = useNavigate();  const { id } = useParams<{ id: string }>();  const [isLoading, setIsLoading] = useState(false);  const [estudante, setEstudante] = useState<Estudante | null>(null);  useEffect(() => {    if (!id) return;    const carregarEstudante = async () => {      try {        const response = await buscar(`/estudante/${id}`, () => {}, {});        setEstudante(response.data);      } catch (error) {        ToastAlerta("Erro ao carregar estudante.", "error");        console.error(error);      }    };    carregarEstudante();  }, [id]);  const deletarEstudante = async () => {    if (!id) return;    setIsLoading(true);    try {      await deletar(`/estudante/${id}`, {});      ToastAlerta("Estudante apagado com sucesso!", "success");      navigate("/estudante");    } catch (error) {      ToastAlerta("Erro ao deletar o estudante.", "error");      console.error(error);    } finally {      setIsLoading(false);    }  };  const retornar = () => navigate("/estudante");  if (!estudante) return null;  return (    <main className="container w-1/3 mx-auto mt-12">      <h1 className="text-4xl text-center font-bold mb-6 text-azulescuro">        Deletar Estudante      </h1>      <p className="text-center font-semibold mb-4">        Tem certeza que deseja deletar este estudante?      </p>      <section className="border rounded-2xl overflow-hidden shadow-md flex flex-col justify-between bg-white">        {}        <header className="bg-azulescuro text-white font-bold text-xl py-3 px-6">          Informações do Estudante        </header>        {}        <div className="p-6 flex flex-col gap-3">          <p><strong>Nome:</strong> {estudante.nome}</p>          <p><strong>Email:</strong> {estudante.email}</p>          <p><strong>Endereço:</strong> {estudante.endereco}</p>          <p><strong>Idade:</strong> {estudante.idade || "-"}</p>          <p><strong>Curso:</strong> {estudante.cursoInteresse}</p>          <p><strong>Bolsa:</strong> {estudante.bolsa?.nome || "-"}</p>        </div>        {}        <footer className="flex gap-2">          <button            onClick={retornar}            className="w-full py-2 rounded bg-gray-400 hover:bg-gray-700 text-white transition"          >            Cancelar          </button>          <button            onClick={deletarEstudante}            className="w-full py-2 rounded bg-red-400 hover:bg-red-700 text-white flex items-center justify-center transition"          >            {isLoading ? <ClipLoader color="#ffffff" size={24} /> : "Deletar"}          </button>        </footer>      </section>    </main>  );}export default DeletarEstudante;
