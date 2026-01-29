@@ -13,7 +13,13 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
 
   const handleStatusChange = async (novoStatus: string) => {
     try {
-      const atualizado = { ...estudante, ativo: novoStatus === "ativo" };
+      // Prepara o objeto seguro para enviar ao backend
+      const atualizado = {
+        ...estudante,
+        ativo: novoStatus === "ativo",
+        bolsaId: estudante.bolsa?.id ?? null, // <-- evita NaN
+      };
+
       await atualizar("/estudante", atualizado, () => {}, {});
       setStatus(novoStatus);
       onAtualizar?.();
@@ -47,7 +53,7 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
             Endereço: {estudante.endereco || "-"}
           </p>
           <p className="text-sm font-semibold text-preto">
-            Bolsa: {estudante.bolsa ? "Sim" : "Não"}
+            Bolsa: {estudante.bolsa ? estudante.bolsa.nome : "-"}
           </p>
         </div>
       </div>

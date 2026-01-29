@@ -1,4 +1,4 @@
-// src/models/Estudantes.ts
+import type Bolsa from "./Bolsa";
 
 export default interface Estudantes {
   id: number;
@@ -9,5 +9,5 @@ export default interface Estudantes {
   cursoInteresse: string;
   ativo: boolean;
   avatar: string;
-  bolsa?: boolean; // será preenchido depois
+  bolsa?: Bolsa | null; 
 }

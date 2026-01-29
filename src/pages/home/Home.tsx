@@ -5,7 +5,7 @@ import { PopularScholarships } from "../../components/dashboard/PopularScholarsh
 import { buscar } from "../../services/Service";
 import { Users, GraduationCap, Link, UserX } from "lucide-react";
 import type Bolsa from "../../models/Bolsa";
-import type Estudante from "../../models/Estudante";
+import type Estudante from "../../models/Estudantes";
 import { ToastAlerta } from "../../utils/ToastAlerta";
 
 export function Home() {

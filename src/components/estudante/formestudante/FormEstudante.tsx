@@ -1,10 +1,11 @@
-import { useState, ChangeEvent, FormEvent } from "react";
+import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ClipLoader } from "react-spinners";
 import type Estudantes from "../../../models/Estudantes";
+import type Bolsa from "../../../models/Bolsa";
 import AvatarSelector from "../../../assets/avatar/AvatarSelector";
 import { ToastAlerta } from "../../../utils/ToastAlerta";
-import { cadastrar, atualizar } from "../../../services/Service";
+import { cadastrar, atualizar, buscarDireto } from "../../../services/Service";
 
 function FormEstudante() {
   const navigate = useNavigate();
@@ -12,6 +13,8 @@ function FormEstudante() {
 
   const [isLoading, setIsLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
+  const [bolsasDisponiveis, setBolsasDisponiveis] = useState<Bolsa[]>([]);
+
   const [estudante, setEstudante] = useState<Estudantes>({
     id: 0,
     nome: "",
@@ -20,27 +23,57 @@ function FormEstudante() {
     idade: 0,
     cursoInteresse: "",
     ativo: true,
-   avatar: "adventurer", // ✅ Avatar inicial
-    bolsa: false,
+    avatar: "adventurer",
+    bolsa: null, // Bolsa começa como null
   });
 
-  function atualizarEstado(
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) {
+  // Carregar bolsas do backend
+  useEffect(() => {
+    async function carregarBolsas() {
+      try {
+        const bolsas: Bolsa[] = await buscarDireto("/bolsa", {});
+        console.log("Bolsas carregadas:", bolsas); // Debug
+        setBolsasDisponiveis(bolsas);
+      } catch (error) {
+        console.error("Erro ao carregar bolsas:", error);
+      }
+    }
+    carregarBolsas();
+  }, []);
+
+  // Carregar estudante se estiver editando
+  useEffect(() => {
+    async function carregarEstudante() {
+      if (!id) return;
+      try {
+        const dados: Estudantes = await buscarDireto(`/estudante/${id}`, {});
+        setEstudante(dados);
+      } catch (error) {
+        console.error("Erro ao carregar estudante:", error);
+      }
+    }
+    carregarEstudante();
+  }, [id]);
+
+  function atualizarEstado(e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) {
     const { name, value } = e.target;
     setEstudante({
       ...estudante,
       [name]:
         name === "idade"
           ? Number(value)
-          : name === "ativo" || name === "bolsa"
+          : name === "ativo"
           ? value === "true"
           : value,
     });
   }
 
-  function retornar() {
-    navigate("/estudante");
+  // Seleção de bolsa
+  function handleBolsaChange(e: ChangeEvent<HTMLSelectElement>) {
+    const value = e.target.value;
+    const selecionada =
+      bolsasDisponiveis.find((b) => b.id === Number(value)) ?? null;
+    setEstudante({ ...estudante, bolsa: selecionada });
   }
 
   async function salvarEstudante(e: FormEvent<HTMLFormElement>) {
@@ -48,14 +81,20 @@ function FormEstudante() {
     setIsLoading(true);
 
     try {
+      const payload = {
+        ...estudante,
+        bolsaId: estudante.bolsa?.id ?? null, // evita NaN
+      };
+
       if (id) {
-        await atualizar("/estudante", estudante, setEstudante, {});
+        await atualizar("/estudante", payload, setEstudante, {});
         ToastAlerta("Estudante atualizado com sucesso!", "success");
       } else {
-        await cadastrar("/estudante", estudante, setEstudante, {});
+        await cadastrar("/estudante", payload, setEstudante, {});
         ToastAlerta("Estudante cadastrado com sucesso!", "success");
       }
-      retornar();
+
+      navigate("/estudante");
     } catch (error) {
       console.error(error);
       ToastAlerta(
@@ -72,7 +111,9 @@ function FormEstudante() {
       {/* Avatar */}
       <div className="flex flex-col items-center mb-6">
         <img
-          src={`https://api.dicebear.com/7.x/${estudante.avatar}/svg?seed=${estudante.nome || "User"}`}
+          src={`https://api.dicebear.com/7.x/${estudante.avatar}/svg?seed=${
+            estudante.nome || "User"
+          }`}
           alt="Avatar"
           onClick={() => setModalOpen(true)}
           className="w-24 h-24 rounded-full border-4 border-dourado cursor-pointer hover:scale-105 transition"
@@ -80,11 +121,11 @@ function FormEstudante() {
         <p className="text-sm mt-2 text-azulescuro">Clique para escolher</p>
       </div>
 
-      {/* Formulário */}
       <form
         className="flex flex-col gap-4 w-full max-w-md"
         onSubmit={salvarEstudante}
       >
+        {/* Nome */}
         <div className="flex flex-col gap-2">
           <label>Nome</label>
           <input
@@ -98,6 +139,7 @@ function FormEstudante() {
           />
         </div>
 
+        {/* Email */}
         <div className="flex flex-col gap-2">
           <label>Email</label>
           <input
@@ -111,6 +153,7 @@ function FormEstudante() {
           />
         </div>
 
+        {/* Endereço */}
         <div className="flex flex-col gap-2">
           <label>Endereço</label>
           <input
@@ -124,6 +167,7 @@ function FormEstudante() {
           />
         </div>
 
+        {/* Idade */}
         <div className="flex flex-col gap-2">
           <label>Idade</label>
           <input
@@ -137,6 +181,7 @@ function FormEstudante() {
           />
         </div>
 
+        {/* Curso */}
         <div className="flex flex-col gap-2">
           <label>Curso</label>
           <input
@@ -150,6 +195,7 @@ function FormEstudante() {
           />
         </div>
 
+        {/* Ativo */}
         <div className="flex flex-col gap-2">
           <label>Estudante ativo?</label>
           <select
@@ -163,16 +209,21 @@ function FormEstudante() {
           </select>
         </div>
 
+        {/* Bolsa */}
         <div className="flex flex-col gap-2">
-          <label>Possui Bolsa?</label>
+          <label>Bolsa</label>
           <select
             name="bolsa"
-            value={String(estudante.bolsa)}
-            onChange={atualizarEstado}
+            value={estudante.bolsa?.id ?? ""}
+            onChange={handleBolsaChange}
             className="border-2 border-azulescuro rounded p-2"
           >
-            <option value="true">Sim</option>
-            <option value="false">Não</option>
+            <option value="">-- Nenhuma --</option>
+            {bolsasDisponiveis.map((b) => (
+              <option key={b.id} value={b.id}>
+                {b.nome}
+              </option>
+            ))}
           </select>
         </div>
 
@@ -181,17 +232,11 @@ function FormEstudante() {
           disabled={isLoading}
           className="mt-4 bg-azulescuro text-white py-2 rounded-lg hover:bg-dourado hover:text-preto transition flex justify-center"
         >
-          {isLoading ? (
-            <ClipLoader color="#ffffff" size={20} />
-          ) : id ? (
-            "Atualizar"
-          ) : (
-            "Cadastrar"
-          )}
+          {isLoading ? <ClipLoader color="#ffffff" size={20} /> : id ? "Atualizar" : "Cadastrar"}
         </button>
       </form>
 
-      {/* Modal para escolher avatar */}
+      {/* Modal Avatar */}
       <AvatarSelector
         isOpen={modalOpen}
         onClose={() => setModalOpen(false)}
