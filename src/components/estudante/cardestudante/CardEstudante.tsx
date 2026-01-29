@@ -55,7 +55,6 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
       </div>
 
       <div className="flex items-center p-2 gap-2">
-        {/* Select de status */}
         <select
           value={status}
           onChange={(e) => handleStatusChange(e.target.value)}
@@ -65,7 +64,6 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
           <option value="inativo">Inativo</option>
         </select>
 
-        {/* Botão editar */}
         <button
           onClick={() => navigate(`/editarEstudante/${estudante.id}`)}
           className="ml-auto text-dourado bg-azulescuro hover:text-azulescuro hover:bg-dourado p-1 rounded transition"
@@ -74,7 +72,6 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
           <FiEdit size={18} />
         </button>
 
-        {/* Botão deletar */}
         <Link
           to={`/deletarEstudante/${estudante.id}`}
           className= "text-dourado bg-azulescuro hover:bg-red-800 p-1 rounded transition"
