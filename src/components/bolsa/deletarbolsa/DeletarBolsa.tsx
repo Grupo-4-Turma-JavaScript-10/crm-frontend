@@ -60,7 +60,7 @@ function DeletarBolsa() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
             <div className="bg-white rounded-xl w-full max-w-md shadow-lg">
                 
-                {/* Header */}
+
                 <div className="flex justify-between items-center p-6 pb-4">
                     <div className="flex items-center gap-2 text-red-600">
                         <TrashIcon size={22} />
@@ -73,7 +73,6 @@ function DeletarBolsa() {
                     </button>
                 </div>
 
-                {/* Conteúdo */}
                 <div className="px-6 pb-4">
                     <p className="text-sm text-gray-600 mb-4">
                         Tem certeza que deseja excluir a bolsa{' '}
@@ -83,7 +82,6 @@ function DeletarBolsa() {
                         ?
                     </p>
 
-                    {/* Card com informações da bolsa */}
                     <div className="border border-gray-200 rounded-lg overflow-hidden mb-4">
                         <div className="bg-indigo-800 text-white font-bold text-lg py-2 px-4">
                             Detalhes da Bolsa
@@ -119,7 +117,6 @@ function DeletarBolsa() {
                     </p>
                 </div>
 
-                {/* Ações */}
                 <div className="flex border-t border-gray-200">
                     <button
                         onClick={retornar}

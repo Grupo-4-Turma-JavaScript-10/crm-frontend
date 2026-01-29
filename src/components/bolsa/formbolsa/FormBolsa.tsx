@@ -51,7 +51,6 @@ export function FormBolsa() {
         e.preventDefault();
         setIsLoading(true);
 
-        // Remove o array de estudantes antes de enviar (não editável no form)
         const { Estudante, ...bolsaData } = bolsa;
 
         if (id !== undefined) {
@@ -83,7 +82,6 @@ export function FormBolsa() {
 
                 <form onSubmit={handleSubmit} className="space-y-5">
 
-                    {/* Nome */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Nome da Bolsa
@@ -99,7 +97,6 @@ export function FormBolsa() {
                         />
                     </div>
 
-                    {/* Instituição */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Instituição
@@ -115,7 +112,6 @@ export function FormBolsa() {
                         />
                     </div>
 
-                    {/* Porcentagem */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Porcentagem de Bolsa (%)
@@ -132,7 +128,6 @@ export function FormBolsa() {
                         />
                     </div>
 
-                    {/* Curso */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Curso
@@ -148,7 +143,6 @@ export function FormBolsa() {
                         />
                     </div>
 
-                    {/* Validade */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Validade
@@ -163,7 +157,6 @@ export function FormBolsa() {
                         />
                     </div>
 
-                    {/* Status */}
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                             Status
@@ -180,7 +173,6 @@ export function FormBolsa() {
                         </div>
                     </div>
 
-                    {/* Informação sobre estudantes (apenas exibição) */}
                     {id && bolsa.Estudante && bolsa.Estudante.length > 0 && (
                         <div className="bg-blue-50 border border-blue-200 rounded-md p-3">
                             <p className="text-sm text-blue-800">
@@ -189,7 +181,6 @@ export function FormBolsa() {
                         </div>
                     )}
 
-                    {/* Ações */}
                     <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                         <button
                             type="button"
