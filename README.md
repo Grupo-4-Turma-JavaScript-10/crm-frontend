@@ -13,7 +13,8 @@
 
 <br>
 
-<>
+<img width="1343" height="611" alt="image" src="https://github.com/user-attachments/assets/7c2bea56-9305-4d9d-9375-bcb4647e05b8" />
+
 
 ## 👥 Equipe de Desenvolvimento
 
