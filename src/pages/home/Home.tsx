@@ -3,10 +3,10 @@ import { StatCard } from "../../components/dashboard/StatCard";
 import { RecentActivity } from "../../components/dashboard/RecentActivity";
 import { PopularScholarships } from "../../components/dashboard/PopularScholarships";
 import { buscar } from "../../services/Service";
-
 import { Users, GraduationCap, Link, UserX } from "lucide-react";
 import type Bolsa from "../../models/Bolsa";
 import type Estudante from "../../models/Estudante";
+import { ToastAlerta } from "../../utils/ToastAlerta";
 
 export function Home() {
   const [bolsas, setBolsas] = useState<Bolsa[]>([]);
@@ -20,7 +20,7 @@ export function Home() {
         await buscar("/bolsa", setBolsas, {});
         await buscar("/estudante", setEstudantes, {});
       } catch (error) {
-        console.error("Erro ao buscar dados do dashboard", error);
+        ToastAlerta("Erro ao buscar dados do dashboard", "erro");
       } finally {
         setIsLoading(false);
       }
@@ -43,7 +43,7 @@ export function Home() {
 
   return (
     <main className="p-6 bg-gray-50 min-h-screen space-y-8" role="main">
-      {/* Header */}
+
       <section>
         <h1 className="text-2xl font-semibold text-gray-800">
           Dashboard Geral
