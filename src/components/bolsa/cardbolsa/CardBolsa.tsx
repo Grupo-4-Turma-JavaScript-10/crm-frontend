@@ -3,6 +3,7 @@ import type Bolsa from "../../../models/Bolsa";
 import { PencilSimpleIcon } from "@phosphor-icons/react";
 import { TrashIcon } from "lucide-react";
 
+
 interface CardBolsaProps {
     bolsa: Bolsa;
 }
@@ -28,7 +29,7 @@ function CardBolsa({ bolsa }: CardBolsaProps) {
             </span>
 
             <span className="text-gray-600">
-                {bolsa.Estudante?.length || 0} estudante(s)
+                {bolsa.Estudante?.length|| 0} estudante(s)
             </span>
 
             <div className="flex gap-2 justify-end">

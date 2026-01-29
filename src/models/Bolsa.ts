@@ -1,9 +1,12 @@
+import type Estudantes from "./Estudantes";
+
 export default interface Bolsa {
     id: number;
     nome: string;
     instituicao: string;
     porcentagem: number;
     curso: string;
-    validade: String;
+    validade: string;
     ativa: boolean;
+    Estudante?: Estudantes[];
 }

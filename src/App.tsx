@@ -8,6 +8,9 @@ import Sobre from './pages/sobrenos/SobreNos';
 import { FormBolsa } from './components/bolsa/formbolsa/FormBolsa';
 import ListaBolsas from './components/bolsa/listabolsas/ListaBolsas';
 import DeletarBolsa from './components/bolsa/deletarbolsa/DeletarBolsa';
+import ListaEstudantes from './components/estudante/listaestudantes/ListaEstudantes';
+
+
 
 function App() {
   return (
@@ -24,6 +27,7 @@ function App() {
             <Route path='/bolsascadastrar' element={<FormBolsa/>} />
             <Route path='/editarbolsa/:id' element={<FormBolsa/>} />
             <Route path='/deletarbolsa/:id' element={<DeletarBolsa/>} />
+            <Route path='/estudantes' element={<ListaEstudantes/>} />
           </Routes>
         </main>
       </BrowserRouter>
