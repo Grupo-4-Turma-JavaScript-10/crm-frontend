@@ -32,8 +32,6 @@ function Navbar() {
           w-50
           flex
           flex-col
-          border-r
-          border-gray-200
           bg-white
           z-50 sm:z-40
           transition-transform
@@ -117,9 +115,7 @@ function Navbar() {
           flex
           items-center
           justify-between
-          gap-10
-          border-b
-          border-gray-200
+          gap-10          
           bg-white
           z-40 sm:z-50
         "
