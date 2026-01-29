@@ -16,7 +16,6 @@ export function StatCard({
   return (
     <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100 flex justify-between">
       
-      {/* Texto */}
       <div>
         <p className="text-sm text-gray-500">{title}</p>
 
@@ -31,7 +30,6 @@ export function StatCard({
         )}
       </div>
 
-      {/* Ícone */}
       {icon && (
         <div className={`${iconBg} p-3 rounded-xl text-white h-fit`}>
           {icon}

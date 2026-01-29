@@ -1,29 +1,13 @@
-type Scholarship = {
-  id: number;
-  name: string;
-  students: number;
+import type Bolsa from "../../models/Bolsa";
+
+type Props = {
+  bolsas: (Bolsa & { students: number })[];
 };
 
-const scholarships: Scholarship[] = [
-  {
-    id: 1,
-    name: "Desenvolvimento Web Fullstack",
-    students: 12,
-  },
-  {
-    id: 2,
-    name: "Data Science Fundamentals",
-    students: 8,
-  },
-  {
-    id: 3,
-    name: "UX/UI Design Masterclass",
-    students: 5,
-  },
-];
+export function PopularScholarships({ bolsas }: Props) {
+  if (!bolsas.length) return <p>Nenhuma bolsa cadastrada</p>;
 
-export function PopularScholarships() {
-  const maxStudents = Math.max(...scholarships.map(s => s.students));
+  const maxStudents = Math.max(...bolsas.map(b => b.students));
 
   return (
     <div className="bg-white rounded-xl p-5 shadow-sm border border-gray-100">
@@ -32,21 +16,24 @@ export function PopularScholarships() {
       </h2>
 
       <ul className="space-y-4">
-        {scholarships.map((scholarship) => {
-          const percentage =
-            (scholarship.students / maxStudents) * 100;
+        {bolsas.map(b => {
+          const percentage = maxStudents ? (b.students / maxStudents) * 100 : 0;
 
           return (
-            <li key={scholarship.id}>
+            <li key={b.id}>
               <div className="flex justify-between text-sm text-gray-700 mb-1">
-                <span>{scholarship.name}</span>
-                <span>{scholarship.students}</span>
+                <span>{b.nome}</span>
+                <span>{b.students}</span>
               </div>
 
               <div className="w-full h-2 bg-gray-100 rounded-full">
                 <div
-                  className="h-2 bg-blue-500 rounded-full"
+                  className="h-2 bg-blue-500 rounded-full transition-all duration-500"
                   style={{ width: `${percentage}%` }}
+                  role="progressbar"
+                  aria-valuenow={b.students}
+                  aria-valuemin={0}
+                  aria-valuemax={maxStudents}
                 />
               </div>
             </li>

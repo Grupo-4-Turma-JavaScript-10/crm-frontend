@@ -1,18 +1,49 @@
+import { useEffect, useState } from "react";
 import { StatCard } from "../../components/dashboard/StatCard";
 import { RecentActivity } from "../../components/dashboard/RecentActivity";
 import { PopularScholarships } from "../../components/dashboard/PopularScholarships";
+import { buscar } from "../../services/Service";
 
-import {
-  Users,
-  GraduationCap,
-  Link,
-  UserX,
-} from "lucide-react";
+import { Users, GraduationCap, Link, UserX } from "lucide-react";
+import type Bolsa from "../../models/Bolsa";
+import type Estudante from "../../models/Estudante";
 
 export function Home() {
-  return (
-    <main className="p-6 bg-gray-50 min-h-screen space-y-8">
+  const [bolsas, setBolsas] = useState<Bolsa[]>([]);
+  const [estudantes, setEstudantes] = useState<Estudante[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
+  useEffect(() => {
+    async function fetchData() {
+      setIsLoading(true);
+      try {
+        await buscar("/bolsa", setBolsas, {});
+        await buscar("/estudante", setEstudantes, {});
+      } catch (error) {
+        console.error("Erro ao buscar dados do dashboard", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
+
+  const totalBolsas = bolsas.length;
+  const bolsasAtivas = bolsas.filter(b => b.ativa).length;
+  const alunosComBolsa = estudantes.filter(e =>
+    e.bolsaId != null && bolsas.some(b => b.id === e.bolsaId)
+  ).length;
+  const alunosInativos = estudantes.filter(e => !e.ativa).length;
+
+  const bolsasComContagem = bolsas.map(b => ({
+    ...b,
+    students: estudantes.filter(e => e.bolsaId === b.id).length,
+  }));
+
+  return (
+    <main className="p-6 bg-gray-50 min-h-screen space-y-8" role="main">
+      {/* Header */}
       <section>
         <h1 className="text-2xl font-semibold text-gray-800">
           Dashboard Geral
@@ -22,31 +53,33 @@ export function Home() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total de Estudantes"
-          value={154}
-          subtitle="+12% desde o mês passado"
+          value={isLoading ? "..." : estudantes.length}
+          subtitle="Todos os alunos cadastrados"
           icon={<Users size={20} />}
           iconBg="bg-blue-500"
         />
 
         <StatCard
           title="Bolsas Ativas"
-          value={8}
-          subtitle="De um total de 12"
+          value={isLoading ? "..." : bolsasAtivas}
+          subtitle={`De um total de ${totalBolsas}`}
           icon={<GraduationCap size={20} />}
           iconBg="bg-green-500"
         />
 
         <StatCard
           title="Alunos com Bolsa"
-          value={45}
-          subtitle="29% da base de alunos"
+          value={isLoading ? "..." : alunosComBolsa}
+          subtitle={isLoading
+            ? ""
+            : `${Math.round((alunosComBolsa / estudantes.length) * 100)}% da base de alunos`}
           icon={<Link size={20} />}
           iconBg="bg-purple-500"
         />
 
         <StatCard
           title="Inativos"
-          value={109}
+          value={isLoading ? "..." : alunosInativos}
           subtitle="Sem vínculo ativo"
           icon={<UserX size={20} />}
           iconBg="bg-orange-500"
@@ -55,9 +88,8 @@ export function Home() {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <RecentActivity />
-        <PopularScholarships />
+        <PopularScholarships bolsas={bolsasComContagem} />
       </div>
-
     </main>
   );
 }
