@@ -3,7 +3,6 @@ import dashIco from "../../assets/DashboardIco.png"
 import estudantes from "../../assets/estudantes.png"
 import bolsa from "../../assets/bolsaico.png"
 import vinculo from "../../assets/chain.png"
-import user from "../../assets/user.png"
 import notification from "../../assets/notification.png"
 import canto from "../../assets/canto.png"
 import { useState } from "react"
@@ -17,7 +16,7 @@ function Navbar() {
     { label: "Dashboard", path: "/home", icon: dashIco },
     { label: "Estudantes", path: "/estudantes", icon: estudantes },
     { label: "Bolsas", path: "/bolsas", icon: bolsa },
-    { label: "Vínculos", path: "/vinculos", icon: vinculo }
+    { label: "Sobre Nós", path: "/sobre", icon: vinculo }
   ]
 
   const isActive = (path: string) => location.pathname === path
@@ -133,21 +132,13 @@ function Navbar() {
           ☰
         </button>
 
-        <div className="flex items-center gap-6 ml-auto">
+        <div className="flex items-center gap-6 ml-auto py-1">
           <button className="relative hover:scale-110 transition-transform" aria-label="Notificações">
             <img src={notification} alt="Notificações" className="h-5" />
             <span className="absolute -top-1 -right-1 h-2 w-2 bg-red-500 rounded-full"></span>
           </button>
           
-          <div className="flex items-center gap-3">
-            <span className="text-right leading-tight hidden md:block">
-              <p className="font-medium text-gray-800">Admin User</p>
-              <p className="text-sm text-gray-600">Admin@educ.com</p>
-            </span>
-            <button className="h-10 w-10 rounded-full bg-blue-200 flex items-center justify-center hover:bg-blue-300 transition-colors">
-              <img src={user} alt="User" className="h-5" />
-            </button>
-          </div>
+          
         </div>
       </header>
     </>
