@@ -1,0 +1,150 @@
+import { useNavigate, useParams } from "react-router-dom";
+import { TrashIcon, XIcon } from 'lucide-react';
+import type Bolsa from "../../../models/Bolsa";
+import { useEffect, useState } from "react";
+import { buscar, deletar } from "../../../services/Service";
+import { ClipLoader } from "react-spinners";
+import { ToastAlerta } from "../../../utils/ToastAlerta";
+
+function DeletarBolsa() {
+    const navigate = useNavigate();
+    
+    const [bolsa, setBolsa] = useState<Bolsa>({} as Bolsa);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+    
+    const { id } = useParams<{ id: string }>();
+
+    async function buscarPorId(id: string) {
+        try {
+            await buscar(`/bolsa/${id}`, setBolsa, {});
+        } catch (error: any) {
+            ToastAlerta('Erro ao buscar bolsa', 'erro');
+        }
+    }
+
+    useEffect(() => {
+        if (id !== undefined) {
+            buscarPorId(id);
+        }
+    }, [id]);
+
+    function retornar() {
+        navigate('/bolsas');
+    }
+
+    async function deletarBolsa() {
+        // Verifica se há estudantes vinculados
+        if (bolsa.Estudante && bolsa.Estudante.length > 0) {
+            ToastAlerta(
+                `Não é possível deletar. Existem ${bolsa.Estudante.length} estudante(s) vinculado(s) a esta bolsa.`,
+                'info'
+            );
+            retornar();
+            return;
+        }
+
+        setIsLoading(true);
+        
+        try {
+            await deletar(`/bolsa/${id}`, {});
+            ToastAlerta('Bolsa deletada com sucesso', 'sucesso');
+        } catch (error: any) {
+            ToastAlerta('Erro ao deletar bolsa', 'erro');
+        }
+
+        setIsLoading(false);
+        retornar();
+    }
+
+    return (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+            <div className="bg-white rounded-xl w-full max-w-md shadow-lg">
+                
+                {/* Header */}
+                <div className="flex justify-between items-center p-6 pb-4">
+                    <div className="flex items-center gap-2 text-red-600">
+                        <TrashIcon size={22} />
+                        <h2 className="text-lg font-semibold">
+                            Deletar Bolsa
+                        </h2>
+                    </div>
+                    <button onClick={retornar}>
+                        <XIcon size={20} className="text-gray-400 hover:text-gray-600" />
+                    </button>
+                </div>
+
+                {/* Conteúdo */}
+                <div className="px-6 pb-4">
+                    <p className="text-sm text-gray-600 mb-4">
+                        Tem certeza que deseja excluir a bolsa{' '}
+                        <span className="font-semibold text-gray-800">
+                            {bolsa.nome}
+                        </span>
+                        ?
+                    </p>
+
+                    {/* Card com informações da bolsa */}
+                    <div className="border border-gray-200 rounded-lg overflow-hidden mb-4">
+                        <div className="bg-indigo-800 text-white font-bold text-lg py-2 px-4">
+                            Detalhes da Bolsa
+                        </div>
+                        <div className="bg-slate-50 p-4 space-y-2">
+                            <p className="text-sm">
+                                <span className="font-medium text-gray-700">Nome:</span>{' '}
+                                <span className="text-gray-900">{bolsa.nome}</span>
+                            </p>
+                            <p className="text-sm">
+                                <span className="font-medium text-gray-700">Instituição:</span>{' '}
+                                <span className="text-gray-900">{bolsa.instituicao}</span>
+                            </p>
+                            <p className="text-sm">
+                                <span className="font-medium text-gray-700">porcentagem:</span>{' '}
+                                <span className="text-gray-900">{bolsa.porcentagem}%</span>
+                            </p>
+                            <p className="text-sm">
+                                <span className="font-medium text-gray-700">Curso:</span>{' '}
+                                <span className="text-gray-900">{bolsa.curso}</span>
+                            </p>
+                            {bolsa.Estudante && bolsa.Estudante.length > 0 && (
+                                <p className="text-sm">
+                                    <span className="font-medium text-gray-700">Estudantes vinculados:</span>{' '}
+                                    <span className="text-red-600 font-semibold">{bolsa.Estudante.length}</span>
+                                </p>
+                            )}
+                        </div>
+                    </div>
+
+                    <p className="text-xs text-gray-500">
+                        Essa ação não poderá ser desfeita.
+                    </p>
+                </div>
+
+                {/* Ações */}
+                <div className="flex border-t border-gray-200">
+                    <button
+                        onClick={retornar}
+                        className="w-1/2 py-3 text-sm text-gray-600 bg-gray-100 hover:bg-gray-200 transition font-medium"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        onClick={deletarBolsa}
+                        disabled={isLoading}
+                        className="w-1/2 py-3 text-sm text-white bg-red-600 hover:bg-red-700 transition font-medium flex items-center justify-center gap-2 disabled:opacity-50"
+                    >
+                        {isLoading ? (
+                            <>
+                                <ClipLoader size={18} color="#ffffff" />
+                                <span>Deletando...</span>
+                            </>
+                        ) : (
+                            <span>Confirmar Exclusão</span>
+                        )}
+                    </button>
+                </div>
+            </div>
+        </div>
+    );
+}
+
+export default DeletarBolsa;

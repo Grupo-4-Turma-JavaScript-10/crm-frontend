@@ -74,8 +74,8 @@ function Sobre() {
     ];
 
     return (
-        <main className="w-full bg-gradient-to-b from-black via-gray-900 to-black">
-            <section className="relative min-h-screen px-[5%] py-32 flex flex-col items-center bg-gradient-to-br from-white via-gray-50 to-gray-100">
+        <main className="w-full bg-linear-to-b from-black via-gray-900 to-black">
+            <section className="relative min-h-screen px-[5%] py-32 flex flex-col items-center bg-linear-to-br from-white via-gray-50 to-gray-100">
                 <header className="relative z-10 text-center mb-20">
                     <h1 className="font-sansita text-6xl md:text-7xl font-bold text-gray-900 mb-6">
                         Sobre a Vertex.bah

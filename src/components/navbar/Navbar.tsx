@@ -29,7 +29,7 @@ function Navbar() {
           top-0
           left-0
           h-screen
-          w-[200px]
+          w-50
           flex
           flex-col
           border-r
@@ -110,7 +110,7 @@ function Navbar() {
           fixed
           top-0
           left-0
-          sm:left-[200px]
+          sm:left-50
           right-0
           h-16
           px-4
