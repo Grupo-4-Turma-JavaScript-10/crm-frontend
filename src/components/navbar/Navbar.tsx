@@ -35,7 +35,7 @@ function Navbar() {
           border-r
           border-gray-200
           bg-white
-          z-40
+          z-50 sm:z-40
           transition-transform
           duration-300
           ${menuOpen ? "translate-x-0" : "-translate-x-full sm:translate-x-0"}
@@ -100,7 +100,7 @@ function Navbar() {
 
       {menuOpen && (
         <div
-          className="fixed inset-0 bg-black/30 z-30 sm:hidden"
+          className="fixed inset-0 bg-black/30 backdrop-blur-sm z-40 sm:hidden"
           onClick={() => setMenuOpen(false)}
         />
       )}
@@ -121,7 +121,7 @@ function Navbar() {
           border-b
           border-gray-200
           bg-white
-          z-50
+          z-40 sm:z-50
         "
       >
         <button
