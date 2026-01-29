@@ -1,14 +1,15 @@
-import { useEffect, useState } from "react";
-import { SyncLoader } from "react-spinners";
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import type Estudantes from "../../../models/Estudantes";
-import { buscar } from "../../../services/Service";
-import CardEstudante from "../cardestudante/CardEstudante";
-import ModalEstudante from "../modalestudante/ModalEstudante";
+import { buscarDireto } from "../../../services/Service";
+import { SyncLoader } from "react-spinners";
 import { ToastAlerta } from "../../../utils/ToastAlerta";
+import CardEstudante from "../cardestudante/CardEstudante";
 
-function ListaEstudantes() {
-  const [isLoading, setIsLoading] = useState(false);
+export default function ListaEstudantes() {
+  const navigate = useNavigate();
   const [estudantes, setEstudantes] = useState<Estudantes[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   useEffect(() => {
     carregarEstudantes();
@@ -17,53 +18,61 @@ function ListaEstudantes() {
   async function carregarEstudantes() {
     try {
       setIsLoading(true);
-      const response = await buscar("/estudante");
-      setEstudantes(response.data);
+      const dados = await buscarDireto("/estudante", {});
+      setEstudantes(dados);
     } catch (error) {
-      console.error("Erro ao buscar estudantes", error);
+      console.error(error);
       ToastAlerta("Erro ao carregar estudantes.", "error");
-      setEstudantes([]);
     } finally {
       setIsLoading(false);
     }
   }
 
+  function handleCreate() {
+    navigate("/estudantecadastrar");
+  }
+
   return (
-    <div className="container mx-auto px-4 py-8 flex flex-col gap-8">
-      <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-        <h2 className="text-3xl md:text-4xl font-bold text-azulescuro">
-          Lista de Estudantes
-        </h2>
-        <ModalEstudante
-          onSuccess={carregarEstudantes}
-          buttonClassName="bg-dourado text-preto hover:bg-azulescuro hover:text-white px-4 py-2 rounded transition"
-        />
+    <div className="bg-gray-50 min-h-screen p-6">
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-semibold text-gray-900">
+          Gestão de Estudantes
+        </h1>
+        <button
+          onClick={handleCreate}
+          className="flex items-center gap-2 px-4 py-2 rounded-md bg-azulescuro text-white text-sm hover:bg-blue-700 transition"
+        >
+          Novo Estudante
+        </button>
       </div>
-      {isLoading && (
-        <div className="flex justify-center w-full my-12">
-          <SyncLoader color="#1E40AF" size={32} />
+
+      {isLoading ? (
+        <div className="flex justify-center w-full my-8">
+          <SyncLoader color="#312e81" size={32} />
+        </div>
+      ) : estudantes.length === 0 ? (
+        <div className="px-6 py-10 text-center text-sm text-gray-500">
+          Nenhum estudante cadastrado.
+        </div>
+      ) : (
+        <div className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+          <div className="grid grid-cols-5 px-6 py-3 text-xs font-semibold text-gray-500 border-b border-gray-200">
+            <span>Nome</span>
+            <span>E-mail</span>
+            <span>Curso</span>
+            <span>Bolsa</span>
+            <span className="text-right">Ações</span>
+          </div>
+
+          {estudantes.map((est) => (
+            <CardEstudante
+              key={est.id}
+              estudante={est}
+              onAtualizar={carregarEstudantes}
+            />
+          ))}
         </div>
       )}
-
-      {!isLoading && estudantes.length === 0 && (
-        <div className="flex justify-center w-full my-12">
-          <span className="text-xl md:text-2xl font-medium text-azulescuro text-center">
-            Nenhum estudante foi encontrado!
-          </span>
-        </div>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {estudantes.map((estudante) => (
-          <CardEstudante
-            key={estudante.id}
-            estudante={estudante}
-            onAtualizar={carregarEstudantes}
-          />
-        ))}
-      </div>
     </div>
   );
 }
-
-export default ListaEstudantes;

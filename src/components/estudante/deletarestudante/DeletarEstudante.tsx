@@ -1,7 +1,7 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import type Estudante from "../../../models/Estudantes";
-import { deletar, buscar } from "../../../services/Service";
+import { buscar, deletar } from "../../../services/Service";
 import { ClipLoader } from "react-spinners";
 import { ToastAlerta } from "../../../utils/ToastAlerta";
 
@@ -12,13 +12,13 @@ function DeletarEstudante() {
   const [isLoading, setIsLoading] = useState(false);
   const [estudante, setEstudante] = useState<Estudante | null>(null);
 
-  // Buscar estudante do backend, incluindo a bolsa
+  // Buscar estudante
   useEffect(() => {
     if (!id) return;
 
     const carregarEstudante = async () => {
       try {
-        const response = await buscar(`/estudante/${id}`);
+        const response = await buscar(`/estudante/${id}`, () => {}, {});
         setEstudante(response.data);
       } catch (error) {
         ToastAlerta("Erro ao carregar estudante.", "error");
@@ -31,8 +31,8 @@ function DeletarEstudante() {
 
   const deletarEstudante = async () => {
     if (!id) return;
-    setIsLoading(true);
 
+    setIsLoading(true);
     try {
       await deletar(`/estudante/${id}`, {});
       ToastAlerta("Estudante apagado com sucesso!", "success");
@@ -50,61 +50,47 @@ function DeletarEstudante() {
   if (!estudante) return null;
 
   return (
-    <div className="container w-full max-w-lg mx-auto mt-12">
-      <h1 className="text-4xl text-center font-bold text-azulescuro mb-6">
+    <main className="container w-1/3 mx-auto mt-12">
+      <h1 className="text-4xl text-center font-bold mb-6 text-azulescuro">
         Deletar Estudante
       </h1>
-
-      <p className="text-center text-lg font-medium mb-6">
-        Você tem certeza de que deseja apagar o estudante abaixo?
+      <p className="text-center font-semibold mb-4">
+        Tem certeza que deseja deletar este estudante?
       </p>
 
-      <div className="border rounded-2xl shadow-md overflow-hidden bg-white">
+      <section className="border rounded-2xl overflow-hidden shadow-md flex flex-col justify-between bg-white">
         {/* Header */}
-        <div className="bg-azulescuro text-white font-bold text-xl py-3 px-6">
+        <header className="bg-azulescuro text-white font-bold text-xl py-3 px-6">
           Informações do Estudante
-        </div>
+        </header>
 
         {/* Conteúdo */}
         <div className="p-6 flex flex-col gap-3">
-          <p>
-            <span className="font-semibold">Nome:</span> {estudante.nome}
-          </p>
-          <p>
-            <span className="font-semibold">Email:</span> {estudante.email}
-          </p>
-          <p>
-            <span className="font-semibold">Endereço:</span> {estudante.endereco}
-          </p>
-          <p>
-            <span className="font-semibold">Idade:</span> {estudante.idade || "-"}
-          </p>
-          <p>
-            <span className="font-semibold">Curso:</span> {estudante.cursoInteresse}
-          </p>
-          <p>
-            <span className="font-semibold">Bolsa:</span> {estudante.bolsa ? estudante.bolsa.nome : "-"}
-          </p>
+          <p><strong>Nome:</strong> {estudante.nome}</p>
+          <p><strong>Email:</strong> {estudante.email}</p>
+          <p><strong>Endereço:</strong> {estudante.endereco}</p>
+          <p><strong>Idade:</strong> {estudante.idade || "-"}</p>
+          <p><strong>Curso:</strong> {estudante.cursoInteresse}</p>
+          <p><strong>Bolsa:</strong> {estudante.bolsa?.nome || "-"}</p>
         </div>
 
-
-        <div className="flex">
+        {/* Footer */}
+        <footer className="flex gap-2">
           <button
             onClick={retornar}
-            className="w-1/2 bg-dourado text-preto hover:bg-azulescuro hover:text-white py-3 font-semibold transition"
+            className="w-full py-2 rounded bg-gray-400 hover:bg-gray-700 text-white transition"
           >
-            Não
+            Cancelar
           </button>
-
           <button
             onClick={deletarEstudante}
-            className="w-1/2 bg-dourado text-preto hover:bg-red-800 hover:text-white py-3 font-semibold flex items-center justify-center transition"
+            className="w-full py-2 rounded bg-red-400 hover:bg-red-700 text-white flex items-center justify-center transition"
           >
-            {isLoading ? <ClipLoader color="#ffffff" size={24} /> : "Sim"}
+            {isLoading ? <ClipLoader color="#ffffff" size={24} /> : "Deletar"}
           </button>
-        </div>
-      </div>
-    </div>
+        </footer>
+      </section>
+    </main>
   );
 }
 

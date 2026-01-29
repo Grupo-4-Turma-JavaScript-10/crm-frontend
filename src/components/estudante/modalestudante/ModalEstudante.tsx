@@ -1,24 +1,24 @@
 import Popup from "reactjs-popup";
 import "reactjs-popup/dist/index.css";
 import FormEstudante from "../formestudante/FormEstudante";
-import { cadastrar, atualizar } from "../../../services/Service";
 import type Estudantes from "../../../models/Estudantes";
 import { ToastAlerta } from "../../../utils/ToastAlerta";
+import { cadastrar, atualizar } from "../../../services/Service";
 
 interface ModalProps {
   onSuccess?: () => void;
   estudanteParaEditar?: Estudantes;
 }
 
-function ModalEstudante({ onSuccess, estudanteParaEditar }: ModalProps) {
+export default function ModalEstudante({ onSuccess, estudanteParaEditar }: ModalProps) {
   async function handleSubmit(estudante: Estudantes) {
     try {
       if (estudante.id) {
         await atualizar("/estudante", estudante, () => {}, {});
-        ToastAlerta("Estudante atualizado!", "success");
+        ToastAlerta("Estudante atualizado com sucesso!", "success");
       } else {
         await cadastrar("/estudante", estudante, () => {}, {});
-        ToastAlerta("Estudante cadastrado!", "success");
+        ToastAlerta("Estudante cadastrado com sucesso!", "success");
       }
       onSuccess?.();
     } catch (error) {
@@ -30,7 +30,7 @@ function ModalEstudante({ onSuccess, estudanteParaEditar }: ModalProps) {
   return (
     <Popup
       trigger={
-        <button className="border rounded px-4 py-2 bg-azulescuro text-white hover:bg-dourado hover:text-preto transition">
+        <button className="bg-dourado text-preto px-4 py-2 rounded hover:bg-azulescuro hover:text-white transition">
           {estudanteParaEditar ? "Editar Estudante" : "Cadastrar Estudante"}
         </button>
       }
@@ -48,6 +48,7 @@ function ModalEstudante({ onSuccess, estudanteParaEditar }: ModalProps) {
     >
       {(close: () => void) => (
         <div className="flex flex-col gap-4">
+          {/* Header */}
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold text-azulescuro">
               {estudanteParaEditar ? "Editar Estudante" : "Cadastrar Estudante"}
@@ -60,11 +61,12 @@ function ModalEstudante({ onSuccess, estudanteParaEditar }: ModalProps) {
             </button>
           </div>
 
+          {/* Form */}
           <FormEstudante
             estudanteInicial={estudanteParaEditar}
-            onSubmit={async (estudante) => {
+            onSuccess={async (estudante) => {
               await handleSubmit(estudante);
-              close(); // fecha o modal após salvar
+              close(); // Fecha modal após salvar
             }}
           />
         </div>
@@ -72,5 +74,3 @@ function ModalEstudante({ onSuccess, estudanteParaEditar }: ModalProps) {
     </Popup>
   );
 }
-
-export default ModalEstudante;
