@@ -103,10 +103,10 @@ function DeletarBolsa() {
                                 <span className="font-medium text-gray-700">Curso:</span>{' '}
                                 <span className="text-gray-900">{bolsa.curso}</span>
                             </p>
-                            {bolsa.Estudante && bolsa.Estudante.length > 0 && (
+                            {bolsa.estudante && bolsa.estudante.length > 0 && (
                                 <p className="text-sm">
                                     <span className="font-medium text-gray-700">Estudantes vinculados:</span>{' '}
-                                    <span className="text-red-600 font-semibold">{bolsa.Estudante.length}</span>
+                                    <span className="text-red-600 font-semibold">{bolsa.estudante.length}</span>
                                 </p>
                             )}
                         </div>
