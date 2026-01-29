@@ -45,7 +45,7 @@ export const atualizarStatus = async (
     dados: object,
     header: object
 ) => {
-    const resposta = await api.patch(url, dados, header);
+    const resposta = await api.put(url, dados, header);
     return resposta.data;
 };
 

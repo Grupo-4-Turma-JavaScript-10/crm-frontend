@@ -32,13 +32,13 @@ export function Home() {
   const totalBolsas = bolsas.length;
   const bolsasAtivas = bolsas.filter(b => b.ativa).length;
   const alunosComBolsa = estudantes.filter(e =>
-    e.bolsaId != null && bolsas.some(b => b.id === e.bolsaId)
+    e.bolsa != null && bolsas.some(b => b.id === e.bolsa?.id)
   ).length;
-  const alunosInativos = estudantes.filter(e => !e.ativa).length;
+  const alunosInativos = estudantes.filter(e => !e.ativo).length;
 
   const bolsasComContagem = bolsas.map(b => ({
     ...b,
-    students: estudantes.filter(e => e.bolsaId === b.id).length,
+    students: estudantes.filter(e => e.bolsa?.id === b.id).length,
   }));
 
   return (
