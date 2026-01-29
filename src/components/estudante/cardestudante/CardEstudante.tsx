@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import type Estudantes from "../../../models/Estudantes";
 import { atualizar } from "../../../services/Service";
+import { FiTrash2, FiEdit } from "react-icons/fi";
 
 interface CardProps {
   estudante: Estudantes;
@@ -10,6 +11,7 @@ interface CardProps {
 
 function CardEstudante({ estudante, onAtualizar }: CardProps) {
   const [status, setStatus] = useState(estudante.ativo ? "ativo" : "inativo");
+  const navigate = useNavigate();
 
   const handleStatusChange = async (novoStatus: string) => {
     try {
@@ -52,7 +54,8 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
         </div>
       </div>
 
-      <div className="flex items-center p-2">
+      <div className="flex items-center p-2 gap-2">
+        {/* Select de status */}
         <select
           value={status}
           onChange={(e) => handleStatusChange(e.target.value)}
@@ -62,11 +65,22 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
           <option value="inativo">Inativo</option>
         </select>
 
+        {/* Botão editar */}
+        <button
+          onClick={() => navigate(`/editarEstudante/${estudante.id}`)}
+          className="ml-auto text-dourado bg-azulescuro hover:text-azulescuro hover:bg-dourado p-1 rounded transition"
+          title="Editar"
+        >
+          <FiEdit size={18} />
+        </button>
+
+        {/* Botão deletar */}
         <Link
           to={`/deletarEstudante/${estudante.id}`}
-          className="ml-auto bg-dourado text-preto hover:bg-red-800 hover:text-white px-4 py-1 rounded transition"
+          className= "text-dourado bg-azulescuro hover:bg-red-800 p-1 rounded transition"
+          title="Deletar"
         >
-          Deletar
+          <FiTrash2 size={18} />
         </Link>
       </div>
     </div>
@@ -74,3 +88,4 @@ function CardEstudante({ estudante, onAtualizar }: CardProps) {
 }
 
 export default CardEstudante;
+
